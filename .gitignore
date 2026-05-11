@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Generated extraction artifacts
+batches/
+run_logs/
+*.log
+
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/

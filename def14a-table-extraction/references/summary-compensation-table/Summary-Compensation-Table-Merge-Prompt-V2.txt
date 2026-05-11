@@ -1,0 +1,68 @@
+Merge the completed V2 chunk outputs into one master-format compensation table and one merged filing report.
+
+Input folder:
+- `[BATCH_FOLDER]/chunks`
+
+Instructions:
+- Read `[BATCH_FOLDER]/README.md` first.
+- Use `[BATCH_FOLDER]/chunk_manifest.csv` as the source of truth for which chunk files belong to this V3 batch.
+- Before merging, verify that every chunk has its corresponding created output CSV:
+  - `[chunk_name]_compensation_table_master.csv`
+  - `[chunk_name]_report.csv`
+- If any chunk output is missing, stop and report exactly which files are missing.
+
+Merge outputs to:
+- `[BATCH_FOLDER]/merged/[BATCH_NAME]-merged_master.csv`
+- `[BATCH_FOLDER]/merged/[BATCH_NAME]-merged_report.csv`
+
+Merge rules:
+- Concatenate chunk output CSVs in chunk-number order.
+- Merge the master files separately from the report files.
+- Preserve the exact column order from the chunk output files.
+- Preserve row order within each chunk output file.
+- Do not re-run extraction or QA during the merge step.
+- Do not change reviewed cell values during merge.
+- Do not create Python scripts or helper code files in the workspace unless I explicitly ask.
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave files in the project folder.
+
+Validation requirements:
+- Confirm that all chunk output CSV schemas match before merging.
+- Confirm that all chunk report CSV schemas match before merging.
+- Confirm that the merged master row count equals the sum of the chunk master row counts.
+- Confirm that the merged report row count equals the sum of the chunk report row counts.
+- Confirm that the merged file still ends with the `Is QA done?` column.
+- Confirm that reviewed rows remain marked `true` in `Is QA done?`.
+- Confirm that the merged report preserves this exact column order:
+  - `cik`
+  - `company_name`
+  - `run_scope`
+  - `target_fiscal_year`
+  - `source_filing_date`
+  - `source_accession_number`
+  - `source_filing_url`
+  - `status`
+  - `extraction_method`
+  - `block_count`
+  - `table_count`
+  - `comp_heading_found`
+  - `comp_table_found`
+  - `grant_table_found`
+  - `det_rows`
+  - `llm_confidence`
+  - `cda_token_count`
+  - `pay_for_performance_flag`
+  - `elapsed_seconds`
+  - `error`
+- Do not silently deduplicate or drop rows.
+
+After completion, report:
+- how many chunk master files were merged
+- how many chunk report files were merged
+- merged master row count
+- merged report row count
+- whether any master schema mismatches were found
+- whether any report schema mismatches were found
+- whether any files were missing
+- whether the merge completed cleanly
+
+If the merge cannot be completed cleanly, stop and report the blocker instead of guessing.

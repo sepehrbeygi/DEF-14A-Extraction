@@ -1,0 +1,81 @@
+Merge the completed V1 Outstanding Equity Awards chunk outputs into one batch master awards CSV and one master batch report.
+
+Input folder:
+- `[BATCH_FOLDER]/chunks`
+
+Instructions:
+- Read `[BATCH_FOLDER]/README.md` first.
+- Use `[BATCH_FOLDER]/chunk_manifest.csv` as the source of truth for which chunk files belong to this batch.
+- Before merging, verify that every chunk has its corresponding output files:
+  - `[chunk_name]_outstanding_equity_awards.csv`
+  - `[chunk_name]_report.csv`
+- If any chunk output is missing, stop and report exactly which files are missing.
+
+Recommended merge outputs:
+- `[BATCH_FOLDER]/merged/[BATCH_NAME]-merged_outstanding_equity_awards.csv`
+- `[BATCH_FOLDER]/merged/[BATCH_NAME]-merged_report.csv`
+
+Merge rules:
+- Concatenate chunk output CSVs in chunk-number order.
+- Merge the awards files and the report files separately.
+- Preserve the exact column order from the chunk output files.
+- Preserve row order within each chunk output file.
+- Do not re-run extraction or QA during the merge step.
+- Do not change reviewed cell values during merge.
+- Do not silently deduplicate or drop rows.
+- Treat the merged report as the updated master batch report for the batch.
+- Do not create Python scripts or helper code files in the workspace unless I explicitly ask.
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave files in the project folder.
+
+Validation requirements:
+- Confirm that all chunk awards CSV schemas match before merging.
+- Confirm that all chunk report CSV schemas match before merging.
+- Confirm that the merged awards row count equals the sum of the chunk awards row counts.
+- Confirm that the merged report row count equals the sum of the chunk report row counts.
+- Confirm that the merged awards CSV preserves this exact column order:
+  - `CIK`
+  - `Company Name`
+  - `Filing URL`
+  - `Name`
+  - `Role`
+  - `Grant Date`
+  - `Option Award (Number of Securities Underlying Unexercised Options Exercisable (#))`
+  - `Option Award (Number of Securities Underlying Unexercised Options Unexercisable (#))`
+  - `Option Award (Equity Incentive Plan Awards: Number of Securities Underlying Unexercised Unearned Options (#))`
+  - `Option Exercise Price ($)`
+  - `Option Expiration Date`
+  - `Stock Awards (Number of Shares or Units of Stock that Have Not Vested (#))`
+  - `Stock Awards (Market Value of Shares or Units of Stock that Have Not Vested ($))`
+  - `Stock Awards (Equity Incentive Plan Awards: Number of Unearned Shares, Units, or Other Rights that Have Not Vested (#))`
+  - `Stock Awards (Equity Incentive Plan Awards: Market or Payout Value of Unearned Shares, Units, or Other Rights that Have Not Vested ($))`
+- Confirm that the merged report preserves this exact column order:
+  - `cik`
+  - `company_name`
+  - `run_scope`
+  - `target_fiscal_year`
+  - `source_filing_date`
+  - `source_accession_number`
+  - `source_filing_url`
+  - `status`
+  - `extraction_method`
+  - `block_count`
+  - `table_count`
+  - `equity_heading_found`
+  - `equity_table_found`
+  - `rows_extracted`
+  - `llm_confidence`
+  - `investigation_required`
+  - `elapsed_seconds`
+  - `error`
+
+After completion, report:
+- how many chunk awards files were merged
+- how many chunk report files were merged
+- merged awards row count
+- merged report row count
+- whether any awards schema mismatches were found
+- whether any report schema mismatches were found
+- whether any files were missing
+- whether the merge completed cleanly
+
+If the merge cannot be completed cleanly, stop and report the blocker instead of guessing.

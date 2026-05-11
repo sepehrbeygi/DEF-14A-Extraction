@@ -1,0 +1,4 @@
+interface:
+  display_name: "DEF 14A Table Extraction"
+  short_description: "Extract DEF 14A compensation tables in chunked Codex workflows."
+  default_prompt: "Use this skill to prepare, run, and merge chunked DEF 14A table extraction workflows."

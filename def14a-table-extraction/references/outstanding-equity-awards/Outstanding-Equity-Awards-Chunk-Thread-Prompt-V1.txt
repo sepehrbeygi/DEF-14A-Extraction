@@ -1,0 +1,54 @@
+Process `[CHUNK_FILENAME]` using the bundled V1 plan in `references/outstanding-equity-awards/Outstanding-Equity-Awards-Agent-Plan-V1.md`.
+
+Execution rules:
+- Read the plan first and use it as the source of truth for extraction, schema mapping, continuation handling, `Role`, confidence, and report behavior.
+- Read the chunk CSV. Each row is one filing work item, not one award row.
+- Use chunk columns `cik`, `target_fiscal_year`, and `source_filing_url`, plus helper columns when present.
+- Treat each filing as independent, even when other filings in the same chunk are for the same company. Do not reuse row patterns or mapping assumptions across filings.
+- If `local_html_path` is present and `local_html_exists=TRUE`, open that local filing first.
+- Otherwise check `[PROJECT_ROOT]/data/raw` first using the local lookup rule from the plan before attempting any download.
+- If `source_filing_url` is blank, do not invent one. Mark the filing unresolved in the report and set `investigation_required=TRUE`.
+- Create row-level output from scratch from the target Outstanding Equity Awards table.
+- Use audit-level precision, not throughput-level precision.
+- Manually inspect all relevant rows, columns, split-row continuations, and footnotes needed for correct mapping.
+- Do not rely on a prewritten parsing script as the source of truth.
+- If the filing is ambiguous or not confidently extractable, do not guess. Set `investigation_required=TRUE` in the report and explain the issue in `error`.
+- If a filing produces more than 30 extracted award rows, set `investigation_required=TRUE` in the report even if the extraction otherwise appears complete.
+- Do not create Python scripts or helper code files in the workspace unless explicitly asked.
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave files in the project folder.
+
+Critical reminders:
+- Ignore table-of-contents links, internal anchors, and cross-reference links that repeat the heading text but are not the actual body section.
+- If the first heading match is followed by an unrelated table such as a director roster or governance table, continue searching for the real body section instead of failing the filing.
+- Prefer the heading occurrence that is followed by the actual option and stock award column headers, not the first textual match anywhere in the document.
+- After finding the target heading or the first page of the target table, keep scanning forward until the same table truly ends.
+- Continue across page breaks and repeated headers until the same table truly ends.
+- Do not skip earlier rows in favor of a later repeated-header page.
+- Treat `Outstanding Equity Awards at December 31, YYYY` as a valid target-heading variant when it leads into the real `Option Awards` / `Stock Awards` table.
+- If continuation rows have blank name cells, carry forward the most recent executive name until a new explicit name appears.
+- Before finalizing `rows_extracted` or `llm_confidence`, explicitly confirm there are no later continuation rows for the same table.
+- Do not emit name-only rows, title-only rows, roster rows, or header rows as award data. Every output row must contain at least one populated award field beyond `Name`, `Role`, and `Grant Date`.
+- Do not collapse separate option and stock rows into one synthesized row.
+- Populate `Role` only if the target Outstanding Equity Awards table itself discloses it. Otherwise leave `Role` blank.
+- If the table has no `Grant Date` header but does have `Vesting Commencement Date`, use `Vesting Commencement Date` as `Grant Date`.
+- If the table has neither `Grant Date` nor `Vesting Commencement Date`, leave `Grant Date` blank.
+- If the filing visibly discloses an option expiration date, do not leave `Option Expiration Date` blank.
+
+Outputs:
+- `[chunk_name]_outstanding_equity_awards.csv`
+- `[chunk_name]_report.csv`
+
+Batch rule:
+- Do not modify batch master outputs during an individual chunk run. Batch updates happen only in the merge step.
+
+After completion, report:
+- filings reviewed
+- filings successfully extracted
+- award rows created
+- filings flagged with `investigation_required=TRUE`
+- whether the awards CSV was created cleanly
+- whether the report CSV was created cleanly
+
+Example:
+
+Process `/path/to/batches/outstanding-equity-awards-v1/chunks/outstanding-equity-awards-v1_chunk-01.csv` using the bundled V1 plan in `references/outstanding-equity-awards/Outstanding-Equity-Awards-Agent-Plan-V1.md`.

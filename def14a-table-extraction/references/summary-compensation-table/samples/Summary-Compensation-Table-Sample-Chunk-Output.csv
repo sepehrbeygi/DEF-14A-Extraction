@@ -1,0 +1,4 @@
+CIK,Company Name,Filing URL,ticker,Name,Title,Year,Salary ($),Bonus Awards ($),Stock Awards ($),Option Awards ($),Non-Equity Incentive Plan Compensation ($),Change in pension value and nonqualified deferred compensation earnings ($),All Other Compensation ($),Total ($),Extra information,Is QA done?
+0001234567,Example Robotics Inc.,https://www.sec.gov/Archives/edgar/data/1234567/000123456725000010/example-def14a.htm,,Jane Doe,Chief Executive Officer,2024,550000,100000,1200000,800000,250000,,18000,2918000,,true
+0001234567,Example Robotics Inc.,https://www.sec.gov/Archives/edgar/data/1234567/000123456725000010/example-def14a.htm,,John Roe,Chief Financial Officer,2024,410000,,600000,,150000,,12000,1172000,,true
+0007654321,Sample Cloud Corp.,https://www.sec.gov/Archives/edgar/data/7654321/000765432125000020/sample-def14a.htm,,Alex Smith,Chief Technology Officer,2024,375000,50000,,700000,100000,,9000,1234000,,true

@@ -1,0 +1,3 @@
+cik,company_name,target_fiscal_year,source_filing_date,source_accession_number,source_filing_url,local_html_path,local_html_exists,status,error
+0001234567,Example Robotics Inc.,2024,2025-04-25,0001234567-25-000010,https://www.sec.gov/Archives/edgar/data/1234567/000123456725000010/example-def14a.htm,/path/to/data/raw/0001234567_000123456725000010.html,TRUE,,
+0007654321,Sample Cloud Corp.,2024,2025-05-02,0007654321-25-000020,https://www.sec.gov/Archives/edgar/data/7654321/000765432125000020/sample-def14a.htm,,FALSE,,

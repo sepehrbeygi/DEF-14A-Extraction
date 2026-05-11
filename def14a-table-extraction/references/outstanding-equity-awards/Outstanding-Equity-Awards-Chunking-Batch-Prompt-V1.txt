@@ -1,0 +1,76 @@
+Split an Outstanding Equity Awards filing list into smaller work chunks for the V1 extraction workflow.
+
+Goal:
+- Take `[SOURCE_CSV]`
+- Split it into chunk CSVs of about 10 filings each
+- Keep one filing per row from the source list
+- Prepare a batch workspace for Outstanding Equity Awards extraction
+
+Source CSV requirements:
+- Each source row is one filing work item
+- Required source columns:
+  - `cik`
+  - `target_fiscal_year`
+  - `source_filing_url`
+- Recommended source columns:
+  - `company_name`
+  - `source_filing_date`
+  - `source_accession_number`
+  - `status`
+  - `error`
+
+Instructions:
+- Read `[SOURCE_CSV]`
+- Preserve the original row order from the source list
+- Create chunk files with up to 10 filings per chunk
+- Do not run extraction during chunking
+- Do not create Python scripts or helper code files in the workspace unless I explicitly ask
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave files in the project folder
+
+Output structure:
+- Create a V1 batch folder under `[OUTPUT_ROOT]`
+- Inside that folder create:
+  - `chunks/`
+  - `merged/`
+  - `chunk_manifest.csv`
+  - `README.md`
+
+Recommended output folder:
+- `[OUTPUT_ROOT]/outstanding-equity-awards-v1`
+
+Chunk naming:
+- `outstanding-equity-awards-v1_chunk-01.csv`
+- `outstanding-equity-awards-v1_chunk-02.csv`
+- and so on
+
+Manifest requirements:
+- Create `chunk_manifest.csv` with columns:
+  - `Chunk File`
+  - `Filings In Chunk`
+  - `First CIK`
+  - `First Company`
+  - `Last CIK`
+  - `Last Company`
+
+README requirements:
+- Explain that each chunk should be processed with `references/outstanding-equity-awards/Outstanding-Equity-Awards-Agent-Plan-V1.md`
+- Explain that agents should check `data/raw` first
+- Explain that each chunk should produce:
+  - `[chunk_name]_outstanding_equity_awards.csv`
+  - `[chunk_name]_report.csv`
+- Explain that merge behavior is handled after all chunk threads are complete
+- Explain that the final merge updates:
+  - the batch master outstanding equity awards CSV
+  - the master batch report
+
+Validation requirements:
+- Confirm the number of filings in the source CSV
+- Confirm the number of chunk files created
+- Confirm that every source filing appears in exactly one chunk
+- Confirm that all chunk CSVs parse cleanly
+
+After completion, report:
+- total filings
+- number of chunks created
+- output folder path
+- chunk manifest path

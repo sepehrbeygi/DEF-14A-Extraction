@@ -1,0 +1,195 @@
+Process [CHUNK_FILENAME] using the bundled V3 plan in `references/summary-compensation-table/Summary-Compensation-Table-Agent-Plan-V3.md`.
+
+Requirements:
+- Read the filing list from the chunk CSV.
+- Each row in the chunk CSV is one filing work item, not one compensation row.
+- Detect which supported input schema the chunk uses before processing.
+- Accept either:
+  - `failure_report-after18.csv` style columns:
+    - `cik`
+    - `company_name`
+    - `target_fiscal_year`
+    - `source_filing_url`
+    - `failure_reason`
+    - `error`
+  - coverage-style columns used by batch 22:
+    - `CIK`
+    - `Company`
+    - `Year`
+    - `Filing URL`
+    - `accession_number`
+    - `filing_date`
+- Map coverage-style columns as:
+  - `CIK` -> `cik`
+  - `Company` -> `company_name`
+  - `Year` -> `target_fiscal_year`
+  - `Filing URL` -> `source_filing_url`
+  - `accession_number` -> `source_accession_number`
+  - `filing_date` -> `source_filing_date`
+- If the chunk does not include `failure_reason` or `error`, treat them as blank inputs.
+- If `source_filing_url` is blank for a filing, do not invent one. Mark that filing unresolved.
+- Use `source_filing_url` as the only filing source.
+- Do not check `Data/Raw` or any other local filing folder.
+- Download the filing directly from the provided SEC filing URL.
+- If the filing download fails, do not guess. Mark that filing unresolved and record the error.
+- For each filing, find the `Summary Compensation Table` and create master-format output rows from scratch.
+- Operate with audit-level precision, not throughput-level precision.
+- Treat every filing row as potentially tricky until it is manually proven correct from the filing.
+- Manually inspect all relevant rows, columns, and cells in the filing.
+- Do not rely on a prewritten Python parsing script as the source of truth.
+- For every created row, confirm `Name`, `Title`, `Year`, and every relevant compensation cell directly from the filing before finalizing it.
+- Keep only the latest disclosed year for each executive. If the filing shows 2024 and 2023 for the same executive, create only the 2024 row.
+- Before assigning any award value, confirm whether the filing header includes `Stock Awards ($)`, `Option Awards ($)`, both, or neither.
+- If only `Option Awards ($)` is present, map the award value only to `Option Awards ($)` and leave `Stock Awards ($)` blank.
+- If only `Stock Awards ($)` is present, map the award value only to `Stock Awards ($)` and leave `Option Awards ($)` blank.
+- If a row shows a high-risk pattern, perform a mandatory second manual review from scratch before accepting it.
+- Build the output rows using the same schema as the existing master compensation tables.
+- Set `Is QA done?` to `true` for every created and verified row.
+- Create one filing-level report row for each filing in the chunk using this exact schema:
+  - `cik`
+  - `company_name`
+  - `run_scope`
+  - `target_fiscal_year`
+  - `source_filing_date`
+  - `source_accession_number`
+  - `source_filing_url`
+  - `status`
+  - `extraction_method`
+  - `block_count`
+  - `table_count`
+  - `comp_heading_found`
+  - `comp_table_found`
+  - `grant_table_found`
+  - `det_rows`
+  - `llm_confidence`
+  - `cda_token_count`
+  - `pay_for_performance_flag`
+  - `elapsed_seconds`
+  - `error`
+- Only fill these required fields in the report unless other values are confidently known:
+  - `cik`
+  - `company_name`
+  - `source_filing_url`
+  - `status`
+  - `comp_table_found`
+  - `error`
+- Do not create Python scripts or other helper code files in the workspace unless I explicitly ask.
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave those files in the project folder.
+
+Output:
+- Create one output CSV for the chunk in the same folder as the chunk input.
+- Recommended naming:
+  - `[chunk_name]_compensation_table_master.csv`
+- Create one filing-level report CSV in the same folder as the chunk input.
+- Recommended naming:
+  - `[chunk_name]_report.csv`
+
+High-risk patterns include:
+- split name/title rows
+- `former` / `from` / `until` / `effective` transition wording
+- large or unusual `All Other Compensation ($)`
+- suspected stock/option/non-equity column shifts
+- tables where only one of `Stock Awards ($)` or `Option Awards ($)` is present
+- footnote-heavy or visually compressed rows
+- rows with many blank compensation cells
+
+After completion, report:
+- filings reviewed
+- filings successfully converted
+- output rows created
+- filings still unresolved
+- whether the output CSV was created cleanly
+- whether the report CSV was created cleanly
+
+Example:
+
+Process /path/to/QA Done/IPO-batch-22-coverage/chunks/QA-Agent-v2_chunk-01.csv using the bundled V3 plan in `references/summary-compensation-table/Summary-Compensation-Table-Agent-Plan-V3.md`.
+
+Requirements:
+- Read the filing list from the chunk CSV.
+- Each row in the chunk CSV is one filing work item, not one compensation row.
+- Detect which supported input schema the chunk uses before processing.
+- Accept either:
+  - `failure_report-after18.csv` style columns:
+    - `cik`
+    - `company_name`
+    - `target_fiscal_year`
+    - `source_filing_url`
+    - `failure_reason`
+    - `error`
+  - coverage-style columns used by batch 22:
+    - `CIK`
+    - `Company`
+    - `Year`
+    - `Filing URL`
+    - `accession_number`
+    - `filing_date`
+- Map coverage-style columns as:
+  - `CIK` -> `cik`
+  - `Company` -> `company_name`
+  - `Year` -> `target_fiscal_year`
+  - `Filing URL` -> `source_filing_url`
+  - `accession_number` -> `source_accession_number`
+  - `filing_date` -> `source_filing_date`
+- If the chunk does not include `failure_reason` or `error`, treat them as blank inputs.
+- If `source_filing_url` is blank for a filing, do not invent one. Mark that filing unresolved.
+- Use `source_filing_url` as the only filing source.
+- Do not check `Data/Raw` or any other local filing folder.
+- Download the filing directly from the provided SEC filing URL.
+- If the filing download fails, do not guess. Mark that filing unresolved and record the error.
+- For each filing, find the `Summary Compensation Table` and create master-format output rows from scratch.
+- Operate with audit-level precision, not throughput-level precision.
+- Treat every filing row as potentially tricky until it is manually proven correct from the filing.
+- Manually inspect all relevant rows, columns, and cells in the filing.
+- Do not rely on a prewritten Python parsing script as the source of truth.
+- For every created row, confirm `Name`, `Title`, `Year`, and every relevant compensation cell directly from the filing before finalizing it.
+- Keep only the latest disclosed year for each executive. If the filing shows 2024 and 2023 for the same executive, create only the 2024 row.
+- Before assigning any award value, confirm whether the filing header includes `Stock Awards ($)`, `Option Awards ($)`, both, or neither.
+- If only `Option Awards ($)` is present, map the award value only to `Option Awards ($)` and leave `Stock Awards ($)` blank.
+- If only `Stock Awards ($)` is present, map the award value only to `Stock Awards ($)` and leave `Option Awards ($)` blank.
+- If a row shows a high-risk pattern, perform a mandatory second manual review from scratch before accepting it.
+- Build the output rows using the same schema as the existing master compensation tables.
+- Set `Is QA done?` to `true` for every created and verified row.
+- Create one filing-level report row for each filing in the chunk using this exact schema:
+  - `cik`
+  - `company_name`
+  - `run_scope`
+  - `target_fiscal_year`
+  - `source_filing_date`
+  - `source_accession_number`
+  - `source_filing_url`
+  - `status`
+  - `extraction_method`
+  - `block_count`
+  - `table_count`
+  - `comp_heading_found`
+  - `comp_table_found`
+  - `grant_table_found`
+  - `det_rows`
+  - `llm_confidence`
+  - `cda_token_count`
+  - `pay_for_performance_flag`
+  - `elapsed_seconds`
+  - `error`
+- Only fill these required fields in the report unless other values are confidently known:
+  - `cik`
+  - `company_name`
+  - `source_filing_url`
+  - `status`
+  - `comp_table_found`
+  - `error`
+- Do not create Python scripts or other helper code files in the workspace unless I explicitly ask.
+- If temporary code is absolutely necessary, use inline commands or `/tmp` and do not leave those files in the project folder.
+
+Output:
+- Create:
+  - `/path/to/QA Done/IPO-batch-22-coverage/chunks/QA-Agent-v2_chunk-01_compensation_table_master.csv`
+  - `/path/to/QA Done/IPO-batch-22-coverage/chunks/QA-Agent-v2_chunk-01_report.csv`
+
+After completion, report:
+- filings reviewed
+- filings successfully converted
+- output rows created
+- filings still unresolved
+- whether the output CSV was created cleanly
+- whether the report CSV was created cleanly
