@@ -1,6 +1,6 @@
-# DEF 14A Extraction Skill Conversation Notes
+# DEF 14A Extraction Skill Design Notes
 
-This file captures the planning decisions from the Codex conversation that produced the `def14a-table-extraction` skill. It is written as public-friendly build notes rather than a raw private transcript.
+This file captures the planning decisions behind the `def14a-table-extraction` skill. It is written as public-friendly build notes rather than a raw private transcript.
 
 ## Initial Goal
 
@@ -197,4 +197,3 @@ Before publishing publicly, review whether any table plans contain project-speci
 [BATCH_FOLDER]
 [BATCH_NAME]
 ```
-

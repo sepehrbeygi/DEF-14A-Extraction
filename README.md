@@ -12,17 +12,30 @@ The workflow is designed for large filing lists: split input filings into chunk 
 ## Repository Layout
 
 ```text
+README.md
+docs/
+    +-- DESIGN_NOTES.md
 def14a-table-extraction/
-+-- SKILL.md
-+-- agents/
-+-- references/
-|   +-- outstanding-equity-awards/
-|   +-- summary-compensation-table/
-+-- scripts/
-    +-- create_def14a_batch.py
-    +-- run_def14a_chunk_waves.sh
-    +-- merge_def14a_chunks.py
+    +-- SKILL.md
+    +-- agents/
+    +-- references/
+    |   +-- outstanding-equity-awards/
+    |   +-- summary-compensation-table/
+    +-- scripts/
+        +-- create_def14a_batch.py
+        +-- run_def14a_chunk_waves.sh
+        +-- merge_def14a_chunks.py
 ```
+
+## Installation
+
+Copy the skill directory into your Codex skills folder:
+
+```bash
+cp -R def14a-table-extraction ~/.codex/skills/
+```
+
+After copying, restart Codex or refresh skill discovery so `def14a-table-extraction` is available in future sessions.
 
 ## Quick Start
 
