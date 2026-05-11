@@ -153,3 +153,7 @@ Helpful issue details include:
 - The desired output columns
 - Any special edge cases, years, industries, or company types you care about
 - Whether you need a one-off extraction prompt, a reusable workflow, or full chunk/merge support
+
+## Contact Me
+
+For questions, collaboration, agentic workflows, business process automation, or building AI products, connect with Sepehr Beygi on LinkedIn: https://www.linkedin.com/in/sepehrbeygi/
