@@ -1,0 +1,14 @@
+Create a beneficial ownership extraction batch from the provided filing-list CSV.
+
+Use:
+
+```bash
+python def14a-table-extraction/scripts/create_def14a_batch.py \
+  --workflow beneficial-ownership \
+  --source-csv /path/to/All-filings-URL.csv \
+  --batch-name beneficial-ownership-v1
+```
+
+For pilot batches, add `--limit N`.
+
+Use `chunk_manifest.csv` as the source of truth for chunk membership. Process chunks with `references/beneficial-ownership/Beneficial-Ownership-Chunk-Thread-Prompt-V1.txt`.

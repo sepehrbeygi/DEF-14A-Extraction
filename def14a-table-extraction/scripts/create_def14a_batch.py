@@ -53,6 +53,19 @@ WORKFLOWS = {
         cik_columns=("cik", "CIK"),
         company_columns=("company_name", "Company", "Company Name"),
     ),
+    "beneficial-ownership": Workflow(
+        key="beneficial-ownership",
+        label="Beneficial Ownership",
+        chunk_prompt="references/beneficial-ownership/Beneficial-Ownership-Chunk-Thread-Prompt-V1.txt",
+        agent_plan="references/beneficial-ownership/Beneficial-Ownership-Agent-Plan-V1.md",
+        output_files=(
+            "[chunk_name]_beneficial_ownership.csv",
+            "[chunk_name]_report.csv",
+        ),
+        input_schemas=(("cik", "source_filing_url"),),
+        cik_columns=("cik", "CIK"),
+        company_columns=("company_name", "Company Name", "Company"),
+    ),
 }
 
 
@@ -133,6 +146,8 @@ def main() -> int:
     parser.add_argument("--batch-name")
     parser.add_argument("--chunk-size", type=int, default=10)
     parser.add_argument("--wave-size", type=int, default=20)
+    parser.add_argument("--offset", type=int, default=0, help="skip the first N input rows before applying --limit")
+    parser.add_argument("--limit", type=int, help="only include the first N input rows; useful for pilot batches")
     parser.add_argument("--force", action="store_true", help="allow writing into an existing empty batch directory")
     args = parser.parse_args()
 
@@ -145,6 +160,14 @@ def main() -> int:
     source_csv = args.source_csv.expanduser().resolve()
     fieldnames, rows = read_csv(source_csv)
     validate_input_schema(workflow, fieldnames)
+    if args.offset < 0:
+        raise ValueError("--offset must be non-negative")
+    if args.offset:
+        rows = rows[args.offset :]
+    if args.limit is not None:
+        if args.limit < 1:
+            raise ValueError("--limit must be positive")
+        rows = rows[: args.limit]
 
     batch_name = slugify(args.batch_name or source_csv.stem)
     batch_dir = (args.output_root.expanduser() / batch_name).resolve()

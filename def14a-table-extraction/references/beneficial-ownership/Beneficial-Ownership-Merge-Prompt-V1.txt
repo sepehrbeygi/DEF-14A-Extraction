@@ -1,0 +1,11 @@
+Merge a completed beneficial ownership extraction batch only after every expected chunk output exists.
+
+Use:
+
+```bash
+python def14a-table-extraction/scripts/merge_def14a_chunks.py \
+  --workflow beneficial-ownership \
+  --batch-dir /path/to/batches/beneficial-ownership-v1
+```
+
+The merge must validate the beneficial ownership output schema and report schema, concatenate chunks in manifest order, and avoid deduplication or value edits.
