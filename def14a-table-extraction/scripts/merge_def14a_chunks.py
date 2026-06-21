@@ -48,6 +48,40 @@ SUMMARY_COMP_COLUMNS = [
     "Is QA done?",
 ]
 
+BENEFICIAL_OWNERSHIP_COLUMNS = [
+    "CIK",
+    "Company Name",
+    "Filing URL",
+    "Source Filing Date",
+    "Source Accession Number",
+    "Beneficial Owner",
+    "Owner Category",
+    "Title / Position",
+    "Address",
+    "Security Class",
+    "Shares Beneficially Owned",
+    "Shares Beneficially Owned (Direct)",
+    "Is Direct",
+    "Includes Indirect Ownership",
+    "Percent of Class",
+    "Options Exercisable Within 60 Days",
+    "RSUs Vesting Within 60 Days",
+    "Warrants Exercisable Within 60 Days",
+    "Restricted Stock / Stock Awards Included",
+    "Convertible / Preferred Shares Included",
+    "Indirect Common Shares Included",
+    "Other Included Non-Direct Securities Amount",
+    "Total Included Non-Direct Amount",
+    "Calculated Direct Shares",
+    "Direct Shares Calculation Method",
+    "Excluded / Disclaimed Securities Amount",
+    "Excluded / Disclaimed Securities Detail",
+    "Other Included Securities",
+    "Footnote References",
+    "Footnote Content",
+    "Extra Information",
+]
+
 REPORT_COLUMNS = [
     "cik",
     "company_name",
@@ -92,6 +126,28 @@ OUTSTANDING_EQUITY_REPORT_COLUMNS = [
     "error",
 ]
 
+BENEFICIAL_OWNERSHIP_REPORT_COLUMNS = [
+    "cik",
+    "company_name",
+    "run_scope",
+    "target_fiscal_year",
+    "source_filing_date",
+    "source_accession_number",
+    "source_filing_url",
+    "status",
+    "extraction_method",
+    "table_count",
+    "ownership_heading_found",
+    "ownership_table_found",
+    "rows_extracted",
+    "dual_class_table",
+    "footnote_heavy",
+    "llm_confidence",
+    "investigation_required",
+    "elapsed_seconds",
+    "error",
+]
+
 
 @dataclass(frozen=True)
 class Workflow:
@@ -119,6 +175,14 @@ WORKFLOWS = {
         merged_report_suffix="-merged_report.csv",
         master_columns=SUMMARY_COMP_COLUMNS,
         report_columns=REPORT_COLUMNS,
+    ),
+    "beneficial-ownership": Workflow(
+        master_suffix="_beneficial_ownership.csv",
+        report_suffix="_report.csv",
+        merged_master_suffix="-merged_beneficial_ownership.csv",
+        merged_report_suffix="-merged_report.csv",
+        master_columns=BENEFICIAL_OWNERSHIP_COLUMNS,
+        report_columns=BENEFICIAL_OWNERSHIP_REPORT_COLUMNS,
     ),
 }
 

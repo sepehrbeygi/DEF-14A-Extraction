@@ -27,6 +27,11 @@ case "$WORKFLOW" in
     OUTPUT_SUFFIX_A="_compensation_table_master.csv"
     OUTPUT_SUFFIX_B="_report.csv"
     ;;
+  beneficial-ownership)
+    PROMPT_FILE="${PROMPT_FILE:-$SKILL_DIR/references/beneficial-ownership/Beneficial-Ownership-Chunk-Thread-Prompt-V1.txt}"
+    OUTPUT_SUFFIX_A="_beneficial_ownership.csv"
+    OUTPUT_SUFFIX_B="_report.csv"
+    ;;
   *)
     echo "Unsupported WORKFLOW: $WORKFLOW" >&2
     exit 1
@@ -68,6 +73,7 @@ Required:
 Common overrides:
   WORKFLOW=outstanding-equity-awards
   WORKFLOW=summary-compensation-table
+  WORKFLOW=beneficial-ownership
   PARALLELISM=20
   MODEL=gpt-5.4
   REASONING_EFFORT=medium
