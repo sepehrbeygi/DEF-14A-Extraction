@@ -1,11 +1,12 @@
 # DEF 14A Extraction
 
-Reusable Codex skill and helper scripts for chunked extraction of compensation tables from DEF 14A proxy filings.
+Reusable Codex skill and helper scripts for chunked extraction of compensation and ownership tables from DEF 14A proxy filings.
 
-This repository currently supports two workflows:
+This repository currently supports three workflows:
 
 - Outstanding Equity Awards at Fiscal Year-End
 - Summary Compensation Table
+- Beneficial Ownership / Security Ownership
 
 The workflow is designed for large filing lists: split input filings into chunk CSVs, run Codex workers over chunks in parallel waves, then merge completed chunk outputs after schema validation.
 
@@ -52,6 +53,7 @@ def14a-table-extraction/
     +-- SKILL.md
     +-- agents/
     +-- references/
+    |   +-- beneficial-ownership/
     |   +-- outstanding-equity-awards/
     |   +-- summary-compensation-table/
     +-- scripts/
@@ -74,7 +76,7 @@ After copying, restart Codex or refresh skill discovery so `def14a-table-extract
 Use the def14a-table-extraction skill to create a Summary Compensation Table batch from /path/to/filings.csv.
 ```
 
-Codex should load the skill when your request mentions DEF 14A compensation table extraction, Outstanding Equity Awards, Summary Compensation Table, chunked extraction, or merging completed extraction chunks.
+Codex should load the skill when your request mentions DEF 14A compensation or ownership table extraction, Outstanding Equity Awards, Summary Compensation Table, Beneficial Ownership, Security Ownership, chunked extraction, or merging completed extraction chunks.
 
 ## Use In Claude
 
@@ -131,7 +133,7 @@ python def14a-table-extraction/scripts/merge_def14a_chunks.py \
   --batch-dir /path/to/batches/outstanding-equity-awards-v1
 ```
 
-Use `summary-compensation-table` as the workflow key for Summary Compensation Table extraction.
+Use `summary-compensation-table` as the workflow key for Summary Compensation Table extraction and `beneficial-ownership` for beneficial ownership / security ownership extraction.
 
 ## Notes
 
@@ -142,7 +144,7 @@ Use `summary-compensation-table` as the workflow key for Summary Compensation Ta
 
 ## Request More DEF 14A Tables
 
-This skill currently focuses on Outstanding Equity Awards and Summary Compensation Table extraction. DEF 14A filings contain many other useful tables and disclosures, including director compensation, pay-versus-performance, beneficial ownership, CEO pay ratio, incentive plan metrics, and shareholder proposal data.
+This skill currently focuses on Outstanding Equity Awards, Summary Compensation Table, and Beneficial Ownership extraction. DEF 14A filings contain many other useful tables and disclosures, including director compensation, pay-versus-performance, CEO pay ratio, incentive plan metrics, and shareholder proposal data.
 
 To request support for another DEF 14A table or disclosure, open a GitHub issue: https://github.com/sepehrbeygi/DEF-14A-Extraction/issues
 
